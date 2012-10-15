@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+    <script src="kinetic-v4.0.2.js"></script>
+    <script>
+      var myData = [0,0,0,50, 60, 70, 80, 45, 67, 33,0,0,0,0];
+      var canvasWidth = 600;
+      var canvasHeight = 200;
+
+      window.onload = function() {
+        var stage = new Kinetic.Stage({
+          container: "container",
+          width: canvasWidth,
+          height: canvasHeight
+        });
+
+        function barArray(dataArray){
+          var numOfItems = dataArray.length;
+          var itemAssignedSpace = (canvasWidth/numOfItems);
+          var itemWidth = itemAssignedSpace/2;
+          var barList = [];
+          for (var j = 0; j < dataArray.length; j++) {
+            if (dataArray[j] != 0) {
+              var itemXPos = j*itemAssignedSpace;
+              var tmpBarConf = new Bar(itemXPos, dataArray[j], itemWidth);
+              var tmpBar = new Kinetic.Rect(tmpBarConf);
+              layer.add(tmpBar);
+            }
+          }
+        }
+
+        var greyRect = new Kinetic.Rect({
+          x: 0,
+          y: 0,
+          width: 100,
+          height: 50,
+          fill: 'grey',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        function writeMessage(messageLayer, message) {
+          var context = messageLayer.getContext();
+          messageLayer.clear();
+          context.font = "18pt Calibri";
+          context.fillStyle = "black";
+          context.fillText(message, 10, 25);
+        }
+        function Bar(xPos, h, w){
+          this.x= xPos;
+          this.y= 200-12;
+          this.width= w;
+          this.height= h;
+          this.fill= "#00D2FF";
+          this.stroke= "black";
+          this.strokeWidth= 1;
+          this.scale = [1,-1];
+          //this.cornerRadius = 2;
+        }
+        function sliderSetter(){
+          this.x= 0;
+          this.y= 200-1;
+          this.width= 15;
+          this.height= 10;
+          this.fill= "#00D2FF";
+          this.stroke= "black";
+          this.strokeWidth= 1;
+          this.scale = [1,-1];
+          this.draggable = true;
+          this.dragBoundFunc= function (pos) {
+            return {
+              x: pos.x,
+              y: this.getAbsolutePosition().y
+            }
+          };
+          //this.cornerRadius = 2;
+        }
+
+        var leftSlider = new sliderSetter();
+        var slider1 = new Kinetic.Rect(leftSlider);
+
+      slider1.on('dragmove', function() {
+        greyRect.setSize(slider1.getX(), 185);
+        //greyRect.getSize()
+        //console.log(slider1.x);
+         });
+
+
+        //var bar1conf = new Bar(20, 50);
+        //var bar2conf = new Bar(40, 60);
+        //var bar3conf = new Bar(60, 70);
+        //var bar4conf = new Bar(80, 80);
+
+        //var bar1 = new Kinetic.Rect(bar1conf);
+        //var bar2 = new Kinetic.Rect(bar2conf);
+        //var bar3 = new Kinetic.Rect(bar3conf);
+        //var bar4 = new Kinetic.Rect(bar4conf);
+
+        var layer = new Kinetic.Layer();
+        //var tooltipLayer = new Kinetic.Layer();
+
+        //bar1.on("mouseover", function() {
+          //writeMessage(tooltipLayer, bar1conf.height);
+        //});
+        // add the shape to the layer
+        //layer.add(rect);
+        //layer.add(rect2);
+        //layer.add(bar1);
+        //layer.add(bar2);
+        //layer.add(bar3);
+        //layer.add(bar4);
+        barArray(myData);
+        layer.add(slider1);
+        layer.add(greyRect);
+        // add the layer to the stage
+        stage.add(layer);
+        //stage.add(tooltipLayer);
+      };
+
+
+    </script>
+  </head>
+  <body>
+    <div id="container"></div>
+  </body>
+</html>
